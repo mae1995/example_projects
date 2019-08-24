@@ -1,11 +1,26 @@
+#   This script is based by the Youtube-Tutorial "Coding Challange #145: 2D Raycasting" created by "The Coding Train".
+#   He using JavaScript and P5-Framework.
+#   I have written it with Python and using the engine pygame.
+#   I have adding some more stuff...
+#   
+#
+#   Source:
+#   Youtube-Video : https://www.youtube.com/watch?v=TOEi6T2mtHo&t
+#
+#
+#   Michael A. Eckhardt, 28.08.2019
+#
+
+
+
 import pygame, random, math
 from pygame.math import Vector2, Vector3
 
 
-# ---
+# --- Init
 pygame.init()
 
-# ---
+# --- Classes
 class Boundary:
 
     def __init__(self, screen, pos_a, pos_b):
@@ -63,8 +78,6 @@ class Particle:
 
         self.position = mouse_pos
 
-
-
 class Ray:
 
     def __init__(self, screen, pos, angle):
@@ -118,22 +131,7 @@ class Ray:
         else:
             return None
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ---
+# --- Main
 screen      =   pygame.display.set_mode((800, 600))
 clock       =   pygame.time.Clock()
 isRunning   =   True
