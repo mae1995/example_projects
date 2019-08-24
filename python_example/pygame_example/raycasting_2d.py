@@ -14,7 +14,7 @@
 
 
 import pygame, random, math
-from pygame.math import Vector2, Vector3
+from pygame.math import Vector2
 
 
 # --- Init
