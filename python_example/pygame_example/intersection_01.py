@@ -9,9 +9,6 @@
 import pygame, math, random
 from pygame.math import Vector2
 
-# --- Global Variable ---
-
-
 # --- Classes ---
 
 class Boundary:
