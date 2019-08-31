@@ -10,9 +10,63 @@ import pygame, math, random
 from pygame.math import Vector2
 
 # --- Classes ---
+class BezierCurve:
+    def __init__(self, screen, p1, p2, p3):
+        self.screen = screen
+
+        self.b_1 = Boundary(screen, p1, p2, (255, 125, 125))
+        self.b_2 = Boundary(screen, p3, p1, (255, 125, 125))
+        self.b_3 = Boundary(screen, p2, p3, (255, 125, 125))
+
+        self.point_0 = self.b_1.start_pos   #
+        self.point_2 = self.b_3.start_pos   #   <- Definition like in Wikipedia-Page
+        self.point_1 = self.b_2.start_pos   #
+
+        self.Boundaries = [self.b_1, self.b_2, self.b_3]
+        self.points = []
+
+    def Show_Lines(self):
+        for boundary in self.Boundaries:
+            boundary.draw_boundary()
+
+    def Move_Boundaries(self, mouse_pressed, mouse_pos):
+        for boundary in self.Boundaries:
+            boundary.move_points(mouse_pressed, mouse_pos)
+
+       
+    def CreatePoints(self):  
+        self.point_0 = self.b_1.start_pos
+        self.point_2 = self.b_3.start_pos
+        self.point_1 = self.b_2.start_pos
+
+        b0_x = self.point_0[0]
+        b0_y = self.point_0[1]
+        b1_x = self.point_1[0]
+        b1_y = self.point_1[1]
+        b2_x = self.point_2[0]
+        b2_y = self.point_2[1]
+
+        pieces = 1000
+
+        self.points = []
+
+        for num in range(0, pieces):
+            t = num / pieces
+
+            result_x = ((b0_x - (2*b1_x) + b2_x) * (t*t)) + ((-2*b0_x + 2*b1_x) * t) + b0_x
+            result_y = ((b0_y - (2*b1_y) + b2_y) * (t*t)) + ((-2*b0_y + 2*b1_y) * t) + b0_y
+
+            self.points.append((result_x, result_y))
+
+    def ShowPoints(self):
+        for point in self.points:
+            p_x = point[0] - 1
+            p_y = point[1] - 1
+
+            pygame.draw.ellipse(self.screen, (255,0,0), (p_x, p_y, 1, 1))
+    
 
 class Boundary:
-
     def __init__(self, screen, start_pos, end_pos, color):
         self.start_pos = start_pos
         self.end_pos = end_pos
@@ -24,7 +78,6 @@ class Boundary:
         self.can_move = False
         self.move_s = False
         self.move_e = False
-
 
     def draw_endpoints(self):
         width   = 6
@@ -147,16 +200,11 @@ isRunning   =   True
 mouse_pos       =   None
 mouse_pressed   = False
 
-wall_1 = Boundary(screen, (25,75), (250, 75), (255,255,255))
+bc_1 = BezierCurve(screen, (400,200), (100, 400), (50, 50))
+bc_2 = BezierCurve(screen, (300,200), (100, 500), (60, 50))
+bc_3 = BezierCurve(screen, (200,200), (100, 200), (50, 70))
 
-wall_2 = Boundary(screen, (50,50), (150, 400), (255,255,0))
-wall_3 = Boundary(screen, (100,50), (250, 400), (255,255,0))
-wall_4 = Boundary(screen, (150,50), (25, 400), (255,255,0))
-wall_5 = Boundary(screen, (200,50), (50, 400), (255,255,0))
-
-walls = [wall_1, wall_2, wall_3, wall_4, wall_5]
-walls_col = [wall_1, wall_2, wall_3, wall_4, wall_5]
-
+arr_bc = [bc_1, bc_2, bc_3]
 
 # ---
 while isRunning:
@@ -183,15 +231,11 @@ while isRunning:
             if event.button == 1:
                 mouse_pressed = False
 
-    for wall in walls:
-        wall.draw_boundary()
-        wall.move_points(mouse_pressed, mouse_pos)
-
-    for wall_1 in walls:
-        for wall_2 in walls:
-            pt = wall_1.is_collide(wall_2)
-            if pt is not None:
-                wall_1.draw_intersection(pt)
+    for bc in arr_bc:
+        bc.Show_Lines()
+        bc.Move_Boundaries(mouse_pressed, mouse_pos)
+        bc.CreatePoints()
+        bc.ShowPoints()
 
     
     pygame.display.flip()
