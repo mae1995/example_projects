@@ -1,7 +1,7 @@
 #   AUTHOR  :   Michael A. Eckhardt
 #   Date    :   24.08.2019
 #
-#   Title   :   Intersection 03
+#   Title   :   BezierCurve 02
 #
 #   
 
