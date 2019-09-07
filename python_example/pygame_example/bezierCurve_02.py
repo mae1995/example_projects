@@ -11,18 +11,20 @@ from pygame.math import Vector2
 
 # --- Classes ---
 class BezierCurve:
-    def __init__(self, screen, p1, p2, p3):
+    def __init__(self, screen, p1, p2, p3, p4):
         self.screen = screen
 
         self.b_1 = Boundary(screen, p1, p2, (255, 125, 125))
-        self.b_2 = Boundary(screen, p3, p1, (255, 125, 125))
-        self.b_3 = Boundary(screen, p2, p3, (255, 125, 125))
+        self.b_2 = Boundary(screen, p2, p3, (255, 125, 125))
+        self.b_3 = Boundary(screen, p3, p4, (255, 125, 125))
+        self.b_4 = Boundary(screen, p4, p1, (255, 125, 125))
 
         self.point_0 = self.b_1.start_pos   #
         self.point_2 = self.b_3.start_pos   #   <- Definition like in Wikipedia-Page
         self.point_1 = self.b_2.start_pos   #
+        self.point_3 = self.b_4.start_pos   #
 
-        self.Boundaries = [self.b_1, self.b_2, self.b_3]
+        self.Boundaries = [self.b_1, self.b_2, self.b_3, self.b_4]
         self.points = []
 
     def Show_Lines(self):
@@ -38,6 +40,7 @@ class BezierCurve:
         self.point_0 = self.b_1.start_pos
         self.point_2 = self.b_3.start_pos
         self.point_1 = self.b_2.start_pos
+        self.point_3 = self.b_4.start_pos
 
         b0_x = self.point_0[0]
         b0_y = self.point_0[1]
@@ -45,6 +48,8 @@ class BezierCurve:
         b1_y = self.point_1[1]
         b2_x = self.point_2[0]
         b2_y = self.point_2[1]
+        b3_x = self.point_3[0]
+        b3_y = self.point_3[1]
 
         pieces = 1000
 
@@ -53,8 +58,8 @@ class BezierCurve:
         for num in range(0, pieces):
             t = num / pieces
 
-            result_x = ((b0_x - (2*b1_x) + b2_x) * (t*t)) + ((-2*b0_x + 2*b1_x) * t) + b0_x
-            result_y = ((b0_y - (2*b1_y) + b2_y) * (t*t)) + ((-2*b0_y + 2*b1_y) * t) + b0_y
+            result_x = (((-b0_x) + (3*b1_x) - (3*b2_x) + b3_x) * (t*t*t)) + (((3*b0_x) - (6*b1_x) + (3*b2_x)) * (t*t)) + (((-3*b0_x) + (3*b1_x)) * t) + b0_x 
+            result_y = (((-b0_y) + (3*b1_y) - (3*b2_y) + b3_y) * (t*t*t)) + (((3*b0_y) - (6*b1_y) + (3*b2_y)) * (t*t)) + (((-3*b0_y) + (3*b1_y)) * t) + b0_y 
 
             self.points.append((result_x, result_y))
 
@@ -200,9 +205,9 @@ isRunning   =   True
 mouse_pos       =   None
 mouse_pressed   = False
 
-bc_1 = BezierCurve(screen, (400,200), (100, 400), (50, 50))
-bc_2 = BezierCurve(screen, (300,200), (100, 500), (60, 50))
-bc_3 = BezierCurve(screen, (200,200), (100, 200), (50, 70))
+bc_1 = BezierCurve(screen, (400,200), (100, 400), (50, 50), (250,40))
+bc_2 = BezierCurve(screen, (300,200), (100, 500), (60, 50), (250,10))
+bc_3 = BezierCurve(screen, (200,200), (100, 200), (50, 70), (250,70))
 
 arr_bc = [bc_1, bc_2, bc_3]
 
